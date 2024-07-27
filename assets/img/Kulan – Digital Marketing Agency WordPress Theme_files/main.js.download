@@ -1,0 +1,84 @@
+(function ($) {
+    'use strict';
+    jQuery(document).on('ready', function () {
+
+        // Mobile Menu
+        $('.menu li.menu-item-has-children>a').on('click', function(){
+			$(this).removeAttr('href');
+			var element = $(this).parent('li');
+			if (element.hasClass('open')) {
+				element.removeClass('open');
+				element.find('li').removeClass('open');
+				element.find('ul').slideUp();
+			}
+			else {
+				element.addClass('open');
+				element.children('ul').slideDown();
+				element.siblings('li').children('ul').slideUp();
+				element.siblings('li').removeClass('open');
+				element.siblings('li').find('li').removeClass('open');
+				element.siblings('li').find('ul').slideUp();
+			}
+        });	
+        $('.menu>ul>li.menu-item-has-children>a').append('<span class="holder"></span>');
+        // End Mobile Menu
+
+		/*========= Youtube Video ==========*/
+        $(".yt__play").modalVideo({
+            channel: "youtube",
+        });
+
+        // Custom Youtube Video Link Publisher
+        $('.yt__play').on('click', function() {
+            var videoId = $(this).data('video-id');
+            // Replace 'player' with your iframe container ID
+            $('#player').html('<iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1" frameborder="0" allowfullscreen></iframe>');
+        });
+        
+    })
+
+    //Start Elementor JS Support
+    $( window ).on( 'elementor/frontend/init', function() {
+        elementorFrontend.hooks.addAction( 'frontend/element_ready/global', function( $scope ) {
+
+            $('.testimonial__slides').not('.slick-initialized').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                autoplay: false,
+                autoplaySpeed: 2000,
+                arrows: true,
+                dots: true,
+                responsive: [
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            dots: false,
+                        }
+                    }
+                ],
+                customPaging: function (slider, i) {
+                    var thumb = $(slider.$slides[i]).find('.slider-nav');
+                    return thumb;
+                }
+            });
+
+            // Popup for Video Magnific Popup
+            $('.video_icon').magnificPopup({
+                disableOn: 700,
+                type: 'iframe',
+                mainClass: 'mfp-fade',
+                removalDelay: 160,
+                preloader: false,
+                fixedContentPos: false
+            });
+
+            // AOS animation
+            AOS.init()
+        });
+    });
+    //End Elementor JS Support
+
+})(jQuery);
+
+
+
